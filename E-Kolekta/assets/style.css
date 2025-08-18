@@ -301,8 +301,8 @@ nav {
 }
 
 .card img {
-    width: 100px;
-    height: auto;
+    width: auto;
+    height: 100px;
     padding-bottom: 20px;
 }
 
@@ -358,9 +358,9 @@ footer {
 }
 
 /* RESPONSIVE */
-@media screen and (max-width: 1024px) {
+@media (max-width: 940px) {
     .logo {
-        padding: 10px 0;
+        margin-right: 30px;
         justify-content: center;
     }
 
@@ -407,6 +407,7 @@ footer {
     }
 }
 
+/* MOBILE RESPONSIVE */
 @media screen and (max-width: 757px) {
     .logo {
         margin: 0;
@@ -426,37 +427,53 @@ footer {
     }
 
     .nav-links a {
-        font-size: 16px;
-        padding: 15px;
+        font-size: 13px;
+        padding: 10px;
     }
 
     .login{
-        font-size: 18px;
+        font-size: 14px;
+        margin: 15px 0 20px 0;
         padding: 0;
     }
 
+    .login a {
+        padding: 7px 30px;
+    }
+
+    .hero {
+        height: 150px;
+    }
+
     .hero h1{
-        font-size: 28px;
-        margin-bottom: 60px;
-        padding: 0 20px;
+        font-size: 26px;
+        margin: 0 0 30px 0;
+        padding: 0 10px;
     }
 
     .hero p {
-        font-size: 14px;
+        font-size: 12px;
         max-width: 400px;
+        padding: 0 15px;
         margin: auto;
     }
 
     #offer {
-        font-size: 24px;
+        font-size: 18px;
+        margin: 18px 0 28px 0;
+    }
+
+    .offers {
+        margin: 0 20px;
+        padding: 20px 20px;
     }
 
     .about_us {
-        padding: 25px 50px;
+        padding: 25px 35px;
     }
 
     .about_us h2 {
-        font-size: 20px;
+        font-size: 18px;
     }
 
     .about_us p {
@@ -465,21 +482,21 @@ footer {
     }
 
     .faq {
-        padding: 15px 20px;
+        padding: 15px;
         border-radius: 10px;
-        margin-top: 40px;
+        margin-top: 30px;
     }
 
     .faq h3 {
         margin-bottom: 20px;
-        font-size: 16px;
+        font-size: 14px;
     }
 
     .faq-item {
         border-bottom: 1px solid #4caf50;
         padding: 10px 0;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 11px;
     }
 
     .faq-item:last-child {
@@ -497,13 +514,47 @@ footer {
         overflow: hidden;
         transition: margin 0.3s ease-in;
         transition: margin 0.1s ease-out;
-        font-size: 12px;
+        font-size: 11px;
         margin-top: 5px;
     }
 
     .faq-answer.show {
         margin-top: 15px;
         max-height: 200px;
+    }
+
+    .e-waste{
+        padding: 40px;
+    }
+
+    .e-waste h2 {
+        font-size: 18px;
+    }
+
+    .e-waste p {
+        margin-bottom: 40px;
+        font-size: 14px;
+    }
+
+    .categories {
+        padding: 30px;
+    }
+
+    .categories h2 {
+        margin-bottom: 30px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .card img {
+        width: 100px;
+        padding-bottom: 15px;
+    }
+
+    .card h4 {
+        font-size: 16px;
     }
 
     .grid {
@@ -514,17 +565,17 @@ footer {
 
     .footer-container {
         flex-direction: column;
-        gap: 20px;
+        gap: 10px;
         padding: 15px;
     }
 
     .footer-section h3 {
-        font-size: 16px;
-        margin-bottom: 10px;
+        font-size: 14px;
+        margin: 15px 0 10px 0;
     }
 
     .footer-section p{
-        font-size: 14px;
+        font-size: 12px;
     }
 
     .social-links {

@@ -19,17 +19,17 @@
 
         <div class="grid">
             <div class="card">
-            <img src="https://img.icons8.com/ios-filled/100/000000/smartphone.png" alt="Cellphone">
-            <h4>Cellphone</h4>
+            <img src="images/cellphone.png" alt="Cellphone">
+            <h4>Cellphone</h4> 
             </div>
 
             <div class="card">
-            <img src="https://img.icons8.com/ios-filled/100/000000/laptop.png" alt="Laptop">
+            <img src="images/laptop.png" alt="Laptop">
             <h4>Laptop</h4>
             </div>
 
             <div class="card">
-            <img src="https://img.icons8.com/ios-filled/100/000000/tv.png" alt="Television">
+            <img src="images/tv.png" alt="Television">
             <h4>Television</h4>
             </div>
 
