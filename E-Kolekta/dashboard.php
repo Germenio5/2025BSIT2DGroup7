@@ -16,5 +16,4 @@
     </div>
     <?php require "views/footer.php"; ?>
 </body>
-<script src="assets/sidebar.js"></script>
 </html>

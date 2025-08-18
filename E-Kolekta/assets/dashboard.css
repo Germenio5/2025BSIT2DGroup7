@@ -4,26 +4,9 @@
     min-height: calc(100vh - 140px);
 }
 
-.hamburger {
-    font-size: 24px;
-    color: white;
-    background: transparent;
-    border: none;       
-    cursor: pointer;     
-    padding: 5px 75px;
-    margin: 10px;        
-    border-radius: 8px;   
-    transition: background-color 0.3s, transform 0.2s;
-    transition: padding 0.3s ease;
-}
-
-.hamburger:hover {
-    background-color: #1f7a2dc6;
-    transform: scale(1.1);
-}
-
 .sidebar {
     width: 200px;
+    padding-top: 20px;
     background-color: #28a745;
     display: flex;
     flex-direction: column;

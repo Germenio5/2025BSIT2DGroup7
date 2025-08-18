@@ -3,7 +3,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
 <div class="sidebar" id="sidebar">
-    <button class="hamburger" id="hamburger">☰</button>
     <a href="dashboard.php" id="user-profile" class="<?php echo ($current_page == 'dashboard.php') ? 'active' : ''; ?>">
         <img src="https://www.iconpacks.net/icons/2/free-user-icon-3297-thumb.png" alt="User Photo">
         <span class="username">username</span>
