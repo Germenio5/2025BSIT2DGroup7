@@ -18,17 +18,17 @@
         <p id="offer">WHAT E-KOLEKTA OFFERS<p>
         <div class="offer-boxes">
             <div class="offer">
-                <img src="https://icones.pro/wp-content/uploads/2021/03/icone-de-calendrier-vert.png" alt="Easy Scheduling">
+                <img src="images/Calendar.png" alt="Easy Scheduling">
                 <h3>Easy Scheduling</h3>
                 <p>Schedule a pickup from your home or choose a nearby drop-off point.</p>
             </div>
             <div class="offer">
-                <img src="https://img.icons8.com/ios-filled/50/2d7a2e/medal.png" alt="Earn Rewards">
+                <img src="images/medal.png" alt="Earn Rewards">
                 <h3>Earn Rewards</h3>
                 <p>Every item you give through E-Kolekta earns points based on type, weight, or condition.</p>
             </div>
             <div class="offer">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGSY-YjL0V4fSZw3I4LxlzQr8K_ehk6YADew&s" alt="Learn to Recycle">
+                <img src="images/recycle_logo.png" alt="Learn to Recycle">
                 <h3>Learn to Recycle</h3>
                 <p>Understand what e-waste is and how to properly sort and prepare your items.</p>
             </div>
