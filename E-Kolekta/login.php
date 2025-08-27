@@ -24,8 +24,8 @@
         </form>
 
         <div class="links">
-            Don’t Have Account? <a href="#">Sign in Here</a><br>
-            Forgot your password? <a href="#">Reset it.</a>
+            Don’t Have Account? <a href="Sign_in.php">Sign in Here</a><br>
+            Forgot your password? <a href="ResetPassword.php">Reset it.</a>
         </div>
         </div>
         </div>

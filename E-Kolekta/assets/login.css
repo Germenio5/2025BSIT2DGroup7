@@ -229,6 +229,84 @@ footer {
     margin-top: 15px;
 }
 
+.Signin-container {
+    display: flex;
+    position: relative;
+    z-index: 2;
+    justify-content: center;
+    align-items: center;
+    height: 100%; 
+    margin-top: 30px;
+}
+
+.Signin-box {
+    background-color: #2d7a2e;
+    padding: 10px 30px 50px 30px;
+    border-radius: 20px;
+    width: 320px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+.signin-btn {
+    background: #4ef45b;
+    border: none;
+    padding: 10px;
+    width: 50%;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#fullname, #confirmpassword, #email, #number {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 20px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.reset-container {
+    display: flex;
+    position: relative;
+    z-index: 2;
+    justify-content: center;
+    align-items: center;
+    height: 100%; 
+}
+
+.reset-box {
+    background-color: #2d7a2e;
+    padding: 10px 30px 50px 30px;
+    border-radius: 20px;
+    width: 320px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+#email {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 20px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.submit-btn {
+    background: #4ef45b;
+    border: none;
+    padding: 10px;
+    width: 50%;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
 @media screen and (max-width: 865px) {
     nav {
