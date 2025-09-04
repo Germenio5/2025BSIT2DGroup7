@@ -14,15 +14,18 @@
         <form id="SigninForm">
             <input type="text" id="username" placeholder="Username" required>
             <input type="text" id="fullname" placeholder="Full Name" required>
-            <input type="text" id="password" placeholder="Password" required>
-            <input type="text" id="confirmpassword" placeholder="Confirm Password" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <input type="password" id="confirmpassword" placeholder="Confirm Password" required>
             <input type="text" id="email" placeholder="Email Address" required>
             <input type="text" id="number" placeholder="Phone Number" required>
 
-           
-
             <button type="submit" class="signin-btn" href=>SIGN IN</button>
         </form>
+
+            <div class="links">
+                Already have Account? <a href="login.php">Log in here</a>
+            </div>
+           
 
         </div>
         </div>

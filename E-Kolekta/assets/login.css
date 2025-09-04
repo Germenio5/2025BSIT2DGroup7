@@ -97,9 +97,9 @@ nav {
     background: url('background.png') center/cover no-repeat;
     color: white;
     text-align: center;
-    padding: 100px 20px 150px 20px;
     overflow: hidden;
-    height: 250px
+    height: auto;
+    padding-bottom: 100px;
 }
 
 .hero .overlay {
@@ -116,9 +116,9 @@ nav {
     display: flex;
     position: relative;
     z-index: 2;
+    margin: 50px 0;
     justify-content: center;
-    align-items: center;
-    height: 100%; 
+    height: auto; 
 }
 
 .login-box {
@@ -170,7 +170,6 @@ nav {
 }
 
 .links {
-    margin-top: 20px;
     font-size: 13px;
     line-height: 1.5;
     color: white;
@@ -233,15 +232,14 @@ footer {
     display: flex;
     position: relative;
     z-index: 2;
+    margin: 50px 0;
     justify-content: center;
-    align-items: center;
-    height: 100%; 
-    margin-top: 30px;
+    height: auto; 
 }
 
 .Signin-box {
     background-color: #2d7a2e;
-    padding: 10px 30px 50px 30px;
+    padding: 20px 30px 30px 30px;
     border-radius: 20px;
     width: 320px;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
@@ -257,6 +255,7 @@ footer {
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
+    margin: 15px 0 0 0;
 }
 
 #fullname, #confirmpassword, #email, #number {
@@ -273,9 +272,9 @@ footer {
     display: flex;
     position: relative;
     z-index: 2;
+    margin: 50px 0;
     justify-content: center;
-    align-items: center;
-    height: 100%; 
+    height: auto; 
 }
 
 .reset-box {
@@ -306,6 +305,7 @@ footer {
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
+    margin: 20px 0 0 0;
 }
 
 @media screen and (max-width: 865px) {
