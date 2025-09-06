@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="assets/style.css"/>
 </head>
 <body>
-    <?php require "views/header_dashboard.php"; ?>
     <div class="content-wrapper">
     <?php include "views/sidebar.php"; ?>
 

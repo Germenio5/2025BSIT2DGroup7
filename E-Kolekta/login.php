@@ -30,7 +30,6 @@
         </div>
         </div>
     </section>
-    <?php require "views/footer.php"; ?>
 </body>
 <script src="assets/login.js"></script>
 </html>
