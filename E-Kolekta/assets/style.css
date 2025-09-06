@@ -8,8 +8,11 @@ nav {
     background-color: #2d7a2e;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 30px;
     height: 80px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .logo {
@@ -19,9 +22,6 @@ nav {
     color: white;
     font-size: 24px;
     font-weight: bold;
-    flex: 1;
-    padding: 20px 0;
-    flex-shrink: 0;
     white-space: nowrap;
 }
 
@@ -35,7 +35,6 @@ nav {
     display: flex;
     gap: 30px;
     justify-content: center;
-    flex: 1;
     flex-wrap: nowrap;
 }
 
@@ -48,12 +47,9 @@ nav {
     padding: 0 15px;
 }
 
-.login{
-    flex: 1;
+.login {
     display: flex;
-    flex-shrink: 0;
     justify-content: flex-end;
-    padding: 5px 5px;
     font-size: 20px;
 }
 
@@ -66,8 +62,8 @@ nav {
     transition: background-color 0.3s;
 }
 
-.login a{
-    color: rgb(255, 255, 255);
+.login a {
+    color: #fff;
     background-color: #54c856;
     font-weight: bold;
     text-decoration: none;
@@ -371,45 +367,42 @@ footer {
 }
 
 @media (max-width: 865px) {
-    .logo {
-        padding: 10px 0;
-        justify-content: center;
-        margin-right: 0;
-    }
-
     nav {
         flex-direction: column;
         height: auto;
+        padding: 15px;
+    }
+
+    .logo {
+        justify-content: center;
+        margin-bottom: 10px;
     }
 
     .nav-links {
-        margin-top: 10px;
-        gap: 15px;
         flex-direction: column;
+        gap: 15px;
         width: 100%;
+        align-items: center;
     }
 
-    .nav-links a{
-        font-size: 20px;
-        display: flex;
-        justify-content: center;
+    .nav-links a {
+        font-size: 18px;
+        padding: 10px;
     }
 
     .login {
         justify-content: center;
-        margin: 20px 0 20px 0;
-        padding: 10 0 0 0;
+        margin: 15px 0;
     }
 
     .login a {
-        padding: 10px 50px;
+        padding: 10px 40px;
     }
 }
 
 /* MOBILE RESPONSIVE */
 @media (max-width: 768px) {
     .logo {
-        margin: 0;
         font-size: 18px;
         gap: 5px;
     }
@@ -417,27 +410,23 @@ footer {
     .logo img {
         width: 40px;
         height: 40px;
-        border-radius: 100px;
     }
 
     .nav-links {
-        margin: 0;
         gap: 10px;
     }
 
     .nav-links a {
-        font-size: 13px;
-        padding: 10px;
+        font-size: 14px;
+        padding: 8px 12px;
     }
 
-    .login{
+    .login {
         font-size: 14px;
-        margin: 15px 0 20px 0;
-        padding: 0;
     }
 
     .login a {
-        padding: 7px 30px;
+        padding: 7px 25px;
     }
 
     .hero {
