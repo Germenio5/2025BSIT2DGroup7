@@ -1,0 +1,891 @@
+.content-wrapper {
+    overflow-x: hidden;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 200px;
+    padding-top: 15px;
+    background-color: #28a745;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#icon img, #logout img{
+    width: 50px;
+    height: 50px;
+    margin-bottom: 15px;
+}
+
+
+.logout{
+    margin-top: 20px;
+    color: #fff;
+    background-color: #54c856;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 10px 15px;
+    transition: background-color 0.3s;
+}
+
+#logout:hover {
+    background-color: #54c856;
+    transform: translateY(-0.5px);
+    box-shadow: 0 5px 5px rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+
+.user-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+#user-profile {
+    margin: 0 0 20px 0;
+}
+
+#user-profile img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid white;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 8px auto;
+}
+
+.username {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    display: block;
+    text-align: center;
+}
+
+.sidebar #user-profile{
+    width: 100%;
+    text-align: center;
+    padding: 12px 0;
+    margin-bottom: 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.sidebar #icon, #logout {
+    width: 100%;
+    text-align: center;
+    padding: 12px 0;
+    margin-bottom: 5px;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar #user-profile:hover,
+.sidebar #icon:hover {
+    background-color: #1f7a2dc6;
+}
+
+.sidebar #user-profile.active,
+.sidebar #icon.active {
+    background-color: #1f7a2dc6;
+}
+
+.main-content {
+    padding: 30px;
+    background-color: #f4f7fb;
+    margin-left: 200px;
+}
+
+/* USER */
+#username {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.activity_status{
+    padding: 30px 20px;
+    margin: 30px 0;
+    width: auto;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+#activity_status{
+    color: #2d7a2e;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0 0 30px 5px;
+}
+
+.activity_status_container{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.activity_status_container > div {
+    flex: 1 1 20px;
+    text-align: center;
+}
+
+.activity_status_container p{
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#total_items_donated_value, 
+#total_e-waste_weight_value, 
+#total_pickup_value, 
+#total_drop-offs_value {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    font-size: 24px;
+}
+
+#total_items_donated img, 
+#total_e-waste_weight img, 
+#total_pickup img, 
+#total_drop-offs img {
+    max-width: 75px;
+    max-height: 75px;
+}
+
+.upcoming_schedule, .previous_donation{
+    width: auto;
+    margin: 0 0 30px 0;
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px 25px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+#upcoming_schedule, #previous_donation{
+    color: #2d7a2e;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.previous_donation h2,
+.upcoming_schedule h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #1a1a1a;
+}
+
+.previous_donation table,
+.upcoming_schedule table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.previous_donation thead,
+.upcoming_schedule thead {
+    background: #f1f3f6;
+}
+
+.previous_donation th, td,
+.upcoming_schedule th, td {
+    padding: 14px 12px;
+    text-align: left;
+    font-size: 18px;
+    color: #333;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.previous_donation th,
+.upcoming_schedule th {
+    font-weight: 600;
+    color: #444;
+}
+
+.previous_donation tbody tr:hover,
+.upcoming_schedule tbody tr:hover {
+    background: #fafafa;
+}
+
+
+/* SET A SCHEDULE */
+.schedule {
+    width: auto;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+#schedule_text{
+    color: #2d7a2e;
+    margin-bottom: 25px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.schedule form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.schedule label {
+    font-weight: bold;
+    color: #2d7a2e;
+    display: block;
+}
+
+.schedule input,
+.schedule select {
+    width: 100%;
+    margin-top: 5px;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.schedule input:focus,
+.schedule select:focus {
+    border-color: #2d7a2e;
+    box-shadow: 0 0 5px rgba(45, 122, 46, 0.4);
+    outline: none;
+}
+
+.option{
+    margin-bottom: -15px;
+}
+
+.dateForm {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.dateForm label {
+    flex: 0 1 100%;
+    margin-bottom: -10px;
+}
+
+.dateForm input,
+.dateForm select {
+    flex: 1;
+    min-width: 45%;
+}
+
+.addressForm input,
+.dropoffForm select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+#pickupAddress label,
+#dropoffLocations label,
+.typeForm label,
+.conditionForm label{
+    margin-bottom: 5px;
+}
+
+
+.submit-btn {
+    background: #54c856;
+    color: white;
+    border: none;
+    padding: 14px;
+    margin-top: 15px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease, transform 0.2s ease;
+}
+
+.submit-btn:hover {
+    background: #2d7a2e;
+    transform: translateY(-2px);
+}
+
+.error-message {
+    color: #d93025;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+}
+
+/* REWARDS */
+.reward_container {
+    width: auto;
+    background: #ffffff;
+    padding: 20px 30px 10px 30px;
+    border-radius: 15px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+}
+
+#reward_text {
+    font-size: 28px;
+    margin: 10px 0 20px 0;
+    font-weight: bold;
+    color: #2d7a2e;
+}
+
+#point_text {
+    font-size: 22px;
+    margin: 30px 0 20px 0;
+    font-weight: bold;
+    color: #2d7a2e;
+}
+
+
+.points_display {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #2d7a2e;
+    margin-bottom: 10px;
+}
+
+.points_display #points {
+    color: #333;
+}
+
+.points-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.points-table th, 
+.points-table td {
+    padding: 12px;
+    text-align: left;
+    font-size: 15px;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: top;
+}
+
+.points-table thead {
+    background: #f1f3f6;
+    font-weight: bold;
+    color: #2d7a2e;
+}
+
+.points-table tbody tr:hover {
+    background: #fafafa;
+}
+
+.redeem_reward_container {
+    margin-top: 30px;
+    padding: 20px 30px 30px 30px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.redeem_reward_container h3 {
+    margin-bottom: 20px;
+    font-size: 22px;
+    color: #2d7a2e;
+}
+
+.redeem-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.redeem-card {
+    background: hsl(121, 80%, 82%);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.redeem-card:hover {
+    transform: translateY(-5px);
+}
+
+.redeem-card h4 {
+    font-size: 20px;
+    color: #000000;
+    margin-bottom: 10px;
+}
+
+.redeem-card p {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #000000;
+}
+
+.redeem-btn {
+    background: #2ebd3a;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.redeem-btn:hover {
+    background: #23942e;
+}
+
+/* VIEW HUB */
+.map-placeholder {
+    width: 100%;
+    height: 400px;
+    background: #e0e0e0;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.dropoff-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+#dropoff_text {
+    font-size: 28px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.dropoff {
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease;
+}
+
+.dropoff:hover {
+    transform: translateY(-3px);
+}
+
+.dropoff p {
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.status-full {
+    color: red;
+    font-weight: bold;
+}
+
+.status-available {
+    color: green;
+    font-weight: bold;
+}
+
+.status-maintenance {
+    color: orange;
+    font-weight: bold;
+}
+
+/* SETTINGs */
+.settings-box {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: auto;
+    margin: auto;
+}
+
+#settings_text {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.profile-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-pic {
+    width: 175px;
+    height: 175px;
+    border-radius: 50%;
+    background: #ccc;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 3px solid #2d7a2e;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 12px;
+    border-bottom: 1px solid #eee;
+    flex-wrap: wrap;
+}
+
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-label {
+    font-weight: bold;
+    color: #333;
+    flex: 1;
+    min-width: 175px;
+}
+
+.setting-value {
+    color: #555;
+    flex: 7;
+    margin-left: 10px;
+    word-break: break-word;
+}
+
+.setting-actions a {
+    text-decoration: none;
+    color: #1a73e8;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.setting-actions .delete {
+    color: red;
+    font-weight: bold;
+}
+
+/*RESPONSIVENESS*/
+
+@media (max-width: 992px) {
+    .points_display {
+        font-size: 22px;
+    }
+
+    .points-table th, .points-table td {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .redeem-cards {
+        justify-content: center;
+        grid-template-columns: repeat(2, 1fr); /* 2 per row */
+    }
+
+    .dropoff-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 890px) {
+    .previous_donation table thead tbody th td tr,
+    .upcoming_schedule table thead tbody th td tr {
+    display: block;
+    }
+
+    .previous_donation thead tr,
+    .upcoming_schedule thead tr {
+    display: none;
+    }
+
+    .previous_donation tbody tr,
+    .upcoming_schedule tbody tr {
+    margin-bottom: 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px;
+    background: #fff;
+    }
+
+    .previous_donation td,
+    .upcoming_schedule td {
+    display: flex;
+    justify-content: flex-start;
+    gap: 15px;
+    padding: 10px;
+    border: none;
+    font-size: 14px;
+    }
+
+    .previous_donation td::before,
+    .upcoming_schedule td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #555;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .sidebar {
+        width: 60px;
+    }
+
+    .main-content {
+        margin-left: 60px;
+    }
+
+
+    #user-profile img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid white;
+        object-fit: cover;
+        display: block;
+        margin: 0 auto 8px auto;
+    }
+
+    #user-profile span{
+        display: none;
+    }
+
+    #user-profile {
+        padding: 12px 0 0 0;
+    }
+
+    #icon div, #logout div {
+        display: none;
+    }
+
+    .sidebar #user-profile{
+        padding: 10px 0 0 0;
+        margin-bottom: 10px;
+    }
+
+    .sidebar #icon{
+        padding: 10px 0 0 0;
+    }
+
+    .sidebar #logout{
+        padding: 10px 0 0 0;
+        margin-top: 10px;
+    }
+
+    #icon img, #logout img{
+        width: 30px;
+        height: 30px;
+        object-fit: cover;
+        display: block;
+        padding: 0 15px;
+    }
+
+    .logout{
+        border-radius: 0;
+        margin: 0;
+        padding: 10px 0;
+    }
+
+    #username {
+        font-size: 24px;
+    }
+
+    #activity_status, 
+    #previous_donation, 
+    #upcoming_schedule{
+        font-size: 20px;
+    }
+
+    .activity_status{
+        margin: 15px 0;
+    }
+
+    .activity_status_container p{
+        font-size: 16px;
+    }
+
+    #total_items_donated_value, 
+    #total_e-waste_weight_value, 
+    #total_pickup_value, 
+    #total_drop-offs_value {
+        font-size: 18px;
+    }
+
+    .schedule {
+        padding: 20px;
+    }
+
+    .schedule h1 {
+        font-size: 22px;
+    }
+
+    .schedule input,
+    .schedule select,
+    #dropoff {
+        font-size: 14px;
+        padding: 10px;
+        font-weight: 100;
+    }
+
+    #dropoff{
+        margin-bottom: 0;
+    }
+
+    .submit-btn {
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    .points-table {
+        border: 0;
+    }
+
+    .points-table thead {
+        display: none;
+    }
+
+    .points-table tbody tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 10px;
+        background: #fff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .points-table tbody td {
+        display: block;
+        padding: 6px 10px;
+        border: none;
+        font-size: 14px;
+        text-align: left;
+    }
+
+    .points-table tbody td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #2d7a2e;
+        margin-right: 6px;
+        display: inline;
+    }
+
+    #dropoff_text,
+    #settings_text {
+        font-size: 20px;
+    }
+
+    .settings-box {
+        width: auto;
+        padding: 15px;
+    }
+
+    .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px 10px;
+    }
+
+    .setting-label {
+        font-size: 15px;
+        min-width: unset;
+        margin-bottom: 5px;
+    }
+
+    .setting-value {
+        font-size: 14px;
+        margin-left: 0;
+        margin-bottom: 8px;
+    }
+
+    .setting-actions {
+        width: 100%;
+        text-align: right;
+    }
+
+    .setting-actions a {
+        display: flex;
+        font-size: 14px;
+        margin-left: 0;
+    }
+}
+
+@media screen and (max-width: 674px) {
+    .activity_status_container {
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+    #total_items_donated_value, 
+    #total_e-waste_weight_value, 
+    #total_pickup_value, 
+    #total_drop-offs_value {
+        margin-bottom: 10px;
+    }
+
+    .redeem-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .dropoff-container {
+        grid-template-columns: 1fr;
+    }
+
+    .map-placeholder {
+        height: 250px;
+        font-size: 16px;
+    }
+
+    .profile-pic {
+        width: 90px;
+        height: 90px;
+    }
+
+    .upload-btn {
+        font-size: 12px;
+        padding: 4px;
+    }
+
+    .setting-label {
+        font-size: 14px;
+    }
+
+    .setting-value {
+        font-size: 13px;
+    }
+
+    .setting-actions a {
+        font-size: 13px;
+    }
+}

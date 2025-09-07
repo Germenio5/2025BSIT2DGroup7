@@ -2,7 +2,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About us</title>
-    <link rel="stylesheet" href="assets/style.css?v=3"/>
+    <link rel="stylesheet" href="assets/css/style.css?v=3"/>
 </head>
 <body>
     <div class="bg-wrapper"></div>
@@ -60,5 +60,5 @@
     </div>
     <?php require "views/footer.php"; ?>
 </body>
-<script src="assets/about_us.js"></script>
+<script src="assets/js/about_us.js"></script>
 </html>

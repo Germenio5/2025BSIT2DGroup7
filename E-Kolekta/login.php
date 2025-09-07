@@ -2,7 +2,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>What E-Waste we Accept</title>
-    <link rel="stylesheet" href="assets/login.css"/>
+    <link rel="stylesheet" href="assets/css/login.css"/>
 </head>
 <body>
     <?php require "views/header_login.php"; ?>
@@ -12,8 +12,13 @@
         <div class="login-box">
         <h2>LOGIN</h2>
         <form id="loginForm">
+            <?php if(isset($_GET['registered']) && $_GET['registered'] == "success"): ?>
+                <p style="color: #34f230; text-align:center; font-size:14px;">Account created successfully! Please log in.</p>
+            <?php endif; ?>
             <input type="text" id="username" placeholder="Username" required>
             <input type="password" id="password" placeholder="Password" required>
+
+            <p id="errorMessage" class="error-message" style="display: none;"></p>
 
             <div class="remember">
                 <input type="checkbox" id="remember">
@@ -24,12 +29,12 @@
         </form>
 
         <div class="links">
-            Don’t Have Account? <a href="Sign_in.php">Sign in here</a><br>
-            Forgot your password? <a href="ResetPassword.php">Reset it.</a>
+            Don’t Have Account? <a href="sign_in.php">Sign in here</a><br>
+            Forgot your password? <a href="reset_password.php">Reset it.</a>
         </div>
         </div>
         </div>
     </section>
 </body>
-<script src="assets/login.js"></script>
+<script src="assets/js/login.js"></script>
 </html>
