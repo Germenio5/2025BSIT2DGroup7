@@ -4,8 +4,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 <div class="sidebar" id="sidebar">
     <a href="dashboard.php" id="user-profile" class="<?php echo ($current_page == 'dashboard.php') ? 'active' : ''; ?>">
-        <img src="images/user_icon.png" alt="User Icon">
-        <span class="username">username</span>
+        <img src="<?= htmlspecialchars($_SESSION['profileImage'] ?? 'images/user_icon.png') ?>" alt="User Icon">
+        <span class="username"><?= htmlspecialchars($_SESSION['username'] ?? $_SESSION['registeredUser']) ?></span>
     </a>
     <a href="schedule.php" id="icon" class="<?php echo ($current_page == 'schedule.php') ? 'active' : ''; ?>"> <img src="images/schedule_icon.png" alt="User Photo"><div>SCHEDULE</div></a>
     <a href="rewards.php" id="icon" class="<?php echo ($current_page == 'rewards.php') ? 'active' : ''; ?>"> <img src="images/reward_icon.png" alt="User Photo"><div>REWARDS</div></a>
