@@ -1,20 +1,49 @@
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("optionForm");
+    const dateField = document.getElementById("date");
+    const dateError = document.getElementById("dateError");
 
     form.addEventListener("submit", function (e) {
         e.preventDefault();
         let isValid = true;
 
-        document.querySelectorAll(".error-message").forEach(el => el.style.display = "none");
+        document.querySelectorAll(".error-message").forEach(el => {
+            if (el.id !== "dateError") el.remove();
+        });
 
-        const requiredFields = ["option", "date", "time", "address", "ewaste-type", "condition"];
+        const requiredFields = ["option", "date", "time", "ewaste-type", "condition"];
+        const option = document.getElementById("option").value;
+
+        if (option === "PICK-UP") {
+            requiredFields.push("address");
+        } else if (option === "DROP-OFF") {
+            requiredFields.push("dropoff");
+        }
+
         requiredFields.forEach(fieldId => {
             const field = document.getElementById(fieldId);
-            if (!field.value.trim()) {
+            if (!field || !field.value.trim()) {
                 isValid = false;
-                showError(field, "This field is required.");
+                if (fieldId !== "date") {
+                    insertError(field, "This field is required.");
+                }
             }
         });
+
+        if (dateField.value) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const selectedDate = new Date(dateField.value);
+
+            if (selectedDate < today) {
+                isValid = false;
+                dateError.textContent = "Invalid date. Date cannot be in the past.";
+                dateError.style.display = "block";
+            } else {
+                dateError.textContent = "";
+                dateError.style.display = "none";
+            }
+        }
 
         if (isValid) {
             alert("✅ Schedule submitted successfully!");
@@ -22,15 +51,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    function showError(field, message) {
-        let error = field.nextElementSibling;
-        if (!error || !error.classList.contains("error-message")) {
-            error = document.createElement("div");
-            error.classList.add("error-message");
-            field.parentNode.appendChild(error);
-        }
+    function insertError(field, message) {
+        const error = document.createElement("div");
+        error.classList.add("error-message");
+        error.style.color = "red";
+        error.style.fontSize = "14px";
+        error.style.marginTop = "5px";
         error.textContent = message;
-        error.style.display = "block";
+
+        field.insertAdjacentElement("afterend", error);
     }
 });
 
@@ -51,5 +80,7 @@ document.getElementById("option").addEventListener("change", function () {
     } else {
         pickupAddress.style.display = "none";
         dropoffLocations.style.display = "none";
+        document.getElementById("address").required = false;
+        document.getElementById("dropoff").required = false;
     }
 });
