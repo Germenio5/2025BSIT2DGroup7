@@ -1,32 +1,38 @@
 <?php
 session_start();
+require_once "database.php";
 
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit;
 }
 
-if (!isset($_SESSION['upcoming_schedule'])) {
-    $_SESSION['upcoming_schedule'] = [];
+$username = $_SESSION['username'];
+
+$today = date("Y-m-d");
+
+// Fetch all user schedules
+$stmt = $conn->prepare("SELECT * FROM schedule WHERE username = ? ORDER BY schedule_date DESC");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Separate data into upcoming and previous
+$upcoming = [];
+$previous = [];
+while ($row = $result->fetch_assoc()) {
+    if ($row['schedule_date'] >= $today) {
+        $upcoming[] = $row;
+    } else {
+        $previous[] = $row;
+    }
 }
 
-if (!isset($_SESSION['previous_donations'])) {
-    $_SESSION['previous_donations'] = [
-        [
-            "date" => "2025-09-11",
-            "time" => "11:00 AM - 12:00 PM",
-            "type" => "Old Laptop",
-            "condition" => "Not Working",
-            "collection" => "Pickup",
-            "tracking" => "EK123456789"
-        ]
-    ];
-}
-
-$total_items_donated = count($_SESSION['previous_donations']);
-$total_e_waste_weight = 25;
-$total_pickups = count(array_filter($_SESSION['previous_donations'], fn($d) => $d['collection'] === 'Pickup'));
-$total_dropoffs = count(array_filter($_SESSION['previous_donations'], fn($d) => $d['collection'] === 'Drop-off'));
+// Compute totals
+$total_items_donated = count($previous);
+$total_pickups = count(array_filter($previous, fn($d) => $d['collection_type'] === 'Pickup'));
+$total_dropoffs = count(array_filter($previous, fn($d) => $d['collection_type'] === 'Drop-off'));
+$total_e_waste_weight = $total_items_donated * 5;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,7 +55,7 @@ $total_dropoffs = count(array_filter($_SESSION['previous_donations'], fn($d) => 
             <?php endif; ?>
 
             <div id="username">
-                Hello, <?= htmlspecialchars($_SESSION['username']); ?>!
+                Hello, <?= htmlspecialchars($username); ?>!
             </div>
 
             <div class="activity_status">
@@ -94,6 +100,7 @@ $total_dropoffs = count(array_filter($_SESSION['previous_donations'], fn($d) => 
                 </div>
             </div>
 
+            <!-- 🗓 Upcoming Schedule -->
             <div class="upcoming_schedule">
                 <div id="upcoming_schedule">Upcoming Schedule</div>
 
@@ -106,25 +113,29 @@ $total_dropoffs = count(array_filter($_SESSION['previous_donations'], fn($d) => 
                                 <th>E-Waste Type</th>
                                 <th>Condition</th>
                                 <th>Collection Type</th>
-                                <th>Tracking ID</th>
+                                <th>Address / Drop-off</th>
                             </tr>
                         </thead>
                         <tbody id="upcoming_schedule_body">
-                            <?php if (empty($_SESSION['upcoming_schedule'])): ?>
+                            <?php if (empty($upcoming)): ?>
                                 <tr>
                                     <td colspan="6" style="text-align:center; color:gray; padding:15px;">
                                         There are no upcoming schedules yet.
                                     </td>
                                 </tr>
                             <?php else: ?>
-                                <?php foreach ($_SESSION['upcoming_schedule'] as $row): ?>
+                                <?php foreach ($upcoming as $row): ?>
                                     <tr>
-                                        <td><?= htmlspecialchars($row['date']); ?></td>
-                                        <td><?= htmlspecialchars($row['time']); ?></td>
-                                        <td><?= htmlspecialchars($row['type']); ?></td>
-                                        <td><?= htmlspecialchars($row['condition']); ?></td>
-                                        <td><?= htmlspecialchars($row['collection']); ?></td>
-                                        <td><?= htmlspecialchars($row['tracking']); ?></td>
+                                        <td><?= htmlspecialchars($row['schedule_date']); ?></td>
+                                        <td><?= htmlspecialchars($row['schedule_time']); ?></td>
+                                        <td><?= htmlspecialchars($row['ewaste_type']); ?></td>
+                                        <td><?= htmlspecialchars($row['e_waste_condition']); ?></td>
+                                        <td><?= htmlspecialchars($row['collection_type']); ?></td>
+                                        <td>
+                                            <?= $row['collection_type'] === 'Pickup'
+                                                ? htmlspecialchars($row['address'])
+                                                : htmlspecialchars($row['dropoff_location']) ?>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php endif; ?>
@@ -133,6 +144,7 @@ $total_dropoffs = count(array_filter($_SESSION['previous_donations'], fn($d) => 
                 </div>
             </div>
 
+            <!-- ♻ Previous Donation -->
             <div class="previous_donation">
                 <div id="previous_donation">Previous E-Waste Donation</div>
 
@@ -145,25 +157,29 @@ $total_dropoffs = count(array_filter($_SESSION['previous_donations'], fn($d) => 
                                 <th>E-Waste Type</th>
                                 <th>Condition</th>
                                 <th>Collection Type</th>
-                                <th>Tracking ID</th>
+                                <th>Address / Drop-off</th>
                             </tr>
                         </thead>
                         <tbody id="previous_donation_body">
-                            <?php if (empty($_SESSION['previous_donations'])): ?>
+                            <?php if (empty($previous)): ?>
                                 <tr>
                                     <td colspan="6" style="text-align:center; color:gray; padding:15px;">
                                         No previous donations recorded.
                                     </td>
                                 </tr>
                             <?php else: ?>
-                                <?php foreach ($_SESSION['previous_donations'] as $row): ?>
+                                <?php foreach ($previous as $row): ?>
                                     <tr>
-                                        <td><?= htmlspecialchars($row['date']); ?></td>
-                                        <td><?= htmlspecialchars($row['time']); ?></td>
-                                        <td><?= htmlspecialchars($row['type']); ?></td>
-                                        <td><?= htmlspecialchars($row['condition']); ?></td>
-                                        <td><?= htmlspecialchars($row['collection']); ?></td>
-                                        <td><?= htmlspecialchars($row['tracking']); ?></td>
+                                        <td><?= htmlspecialchars($row['schedule_date']); ?></td>
+                                        <td><?= htmlspecialchars($row['schedule_time']); ?></td>
+                                        <td><?= htmlspecialchars($row['ewaste_type']); ?></td>
+                                        <td><?= htmlspecialchars($row['e_waste_condition']); ?></td>
+                                        <td><?= htmlspecialchars($row['collection_type']); ?></td>
+                                        <td>
+                                            <?= $row['collection_type'] === 'Pickup'
+                                                ? htmlspecialchars($row['address'])
+                                                : htmlspecialchars($row['dropoff_location']) ?>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php endif; ?>
@@ -178,9 +194,7 @@ $total_dropoffs = count(array_filter($_SESSION['previous_donations'], fn($d) => 
         document.addEventListener("DOMContentLoaded", () => {
             const notif = document.getElementById("notifBox");
             if (notif) {
-                setTimeout(() => {
-                    notif.style.display = "none";
-                }, 8000);
+                setTimeout(() => notif.style.display = "none", 8000);
             }
         });
     </script>

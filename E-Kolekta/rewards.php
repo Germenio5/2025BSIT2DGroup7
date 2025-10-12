@@ -1,12 +1,35 @@
 <?php
 session_start();
+require_once "database.php";
 
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit;
 }
 
-$userPoints = 200.00;
+$username = $_SESSION['username'];
+
+// ✅ Get total points of the user
+$stmt = $conn->prepare("SELECT SUM(points) AS total_points FROM donations WHERE username = ?");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+$userPoints = $row['total_points'] ?? 0;
+$stmt->close();
+
+
+$stmt = $conn->prepare("
+    SELECT donation_date, ewaste_type, e_waste_condition, weight, points
+    FROM donations
+    WHERE username = ?
+    ORDER BY donation_date DESC
+    LIMIT 5
+");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$donations = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
 
 $rewards = [
     ["amount" => "PHP 20.00", "cost" => 200.00],
@@ -16,26 +39,11 @@ $rewards = [
     ["amount" => "PHP 500.00", "cost" => 5000.00],
     ["amount" => "PHP 1000.00", "cost" => 10000.00],
 ];
-
-if (!isset($_SESSION['previous_donations'])) {
-    $_SESSION['previous_donations'] = [];
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['type'], $_POST['condition'])) {
-    $_SESSION['previous_donations'][] = [
-        "date" => date("Y-m-d"),
-        "time" => date("h:i A"),
-        "type" => $_POST['type'],
-        "condition" => $_POST['condition'],
-        "collection" => "Pickup",
-        "tracking" => "EK" . rand(100000000, 999999999)
-    ];
-    header("Location: reward.php?added=success");
-    exit;
-}
 ?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rewards</title>
     <link rel="stylesheet" href="assets/css/dashboard.css"/>
@@ -46,10 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['type'], $_POST['condi
         <?php include "views/sidebar.php"; ?>
 
         <div class="main-content">
-
             <div class="reward_container">
                 <div class="redeem-section">
                     <div id="reward_text">REWARD</div>
+
                     <div class="points_display">
                         POINTS: <div id="points"><?= number_format($userPoints, 2) ?></div>
                     </div>
@@ -67,20 +75,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['type'], $_POST['condi
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if (empty($_SESSION['previous_donations'])): ?>
+                                <?php if (empty($donations)): ?>
                                     <tr>
                                         <td colspan="5" style="text-align:center; color:gray; font-style:italic; padding:15px;">
-                                            No previous donations yet.
+                                            No donations recorded yet.
                                         </td>
                                     </tr>
                                 <?php else: ?>
-                                    <?php foreach (array_slice($_SESSION['previous_donations'], -5) as $donation): ?>
+                                    <?php foreach ($donations as $donation): ?>
                                         <tr>
-                                            <td><?= htmlspecialchars($donation['date']); ?></td>
-                                            <td><?= htmlspecialchars($donation['type']); ?></td>
-                                            <td><?= htmlspecialchars($donation['condition']); ?></td>
-                                            <td>--</td>
-                                            <td>--</td>
+                                            <td><?= htmlspecialchars($donation['donation_date']); ?></td>
+                                            <td><?= htmlspecialchars($donation['ewaste_type']); ?></td>
+                                            <td><?= htmlspecialchars($donation['e_waste_condition']); ?></td>
+                                            <td><?= htmlspecialchars($donation['weight_kg']); ?></td>
+                                            <td><?= htmlspecialchars($donation['points']); ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php endif; ?>

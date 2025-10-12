@@ -1,46 +1,20 @@
 <?php
 session_start();
+require_once "database.php";
+
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit;
 }
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $date = $_POST['date'] ?? '';
-    $time = $_POST['time'] ?? '';
-    $option = $_POST['option'] ?? '';
-    $ewaste = $_POST['ewaste-type'] ?? '';
-    $condition = $_POST['condition'] ?? '';
-    $address = $_POST['address'] ?? '';
-    $dropoff = $_POST['dropoff'] ?? '';
+$username = $_SESSION['username'];
 
-    if (!empty($date) && !empty($time) && !empty($ewaste) && !empty($condition)) {
-        $collectionType = ($option === "PICK-UP") ? "Pickup" : "Drop-off";
-        $trackingID = "EK" . rand(100000000, 999999999);
-
-        $newSchedule = [
-            "date" => $date,
-            "time" => $time,
-            "type" => $ewaste,
-            "condition" => $condition,
-            "collection" => $collectionType,
-            "tracking" => $trackingID
-        ];
-
-        $scheduleDateTime = strtotime("$date " . explode("-", $time)[0]);
-        $now = time();
-
-        if ($scheduleDateTime > $now) {
-            $_SESSION['upcoming_schedule'][] = $newSchedule;
-        } else {
-            $_SESSION['previous_donations'][] = $newSchedule;
-        }
-
-        header("Location: dashboard.php?success=1");
-        exit;
-    }
-}
+$stmt = $conn->prepare("SELECT * FROM schedule WHERE username = ? ORDER BY schedule_date DESC");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,6 +23,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <title>Set Schedule</title>
     <link rel="stylesheet" href="assets/css/dashboard.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.19/index.global.min.js"></script>
+    
 </head>
 <body>
     <div class="content-wrapper">
@@ -70,6 +46,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <label for="date">DATE:</label>
                         <input type="date" id="date" name="date" required>
                         <div class="error-message" id="dateError"></div>
+
+                        <div id="calendar"></div>
 
                         <label for="time">TIME:</label>
                         <select id="time" name="time" required>

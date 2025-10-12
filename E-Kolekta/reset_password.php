@@ -1,13 +1,30 @@
 <?php
 session_start();
+require_once "database.php";
+
 $resetMessage = "";
 $resetColor = "red";
 $email = $_POST['email'] ?? '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $resetMessage = "A reset link has been sent to your email. It will expire in 5 minutes.";
-        $resetColor = "lime";
+
+        // Check if the email exists in the accounts table
+        $sql = $conn->prepare("SELECT * FROM accounts WHERE email_address = ?");
+        $sql->bind_param("s", $email);
+        $sql->execute();
+        $result = $sql->get_result();
+
+        if ($result->num_rows > 0) {
+            // Simulate sending reset link
+            $resetMessage = "A reset link has been sent to your email. It will expire in 5 minutes.";
+            $resetColor = "lime";
+        } else {
+            $resetMessage = "No account found with this email address.";
+            $resetColor = "red";
+        }
+
+        $sql->close();
     } else {
         $resetMessage = "Please enter a valid email.";
         $resetColor = "red";
@@ -34,7 +51,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="text" name="email" id="email" placeholder="Email Address" required value="<?= htmlspecialchars($email) ?>">
             
             <?php if (!empty($resetMessage)): ?>
-                <div id="resetMessage" style="display:block; margin-top:5px; font-size:14px; color:<?= $resetColor ?>;"><?= $resetMessage ?></div>
+                <div id="resetMessage" style="display:block; margin-top:5px; font-size:14px; color:<?= $resetColor ?>;">
+                    <?= $resetMessage ?>
+                </div>
             <?php else: ?>
                 <div id="resetMessage" style="display:none; margin-top:5px; font-size:14px;"></div>
             <?php endif; ?>

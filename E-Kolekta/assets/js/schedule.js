@@ -7,6 +7,31 @@ document.addEventListener("DOMContentLoaded", () => {
     const confirmBtn = document.getElementById("confirmBtn");
     const cancelBtn = document.getElementById("cancelBtn");
 
+    const calendarContainer = document.createElement("div");
+    calendarContainer.id = "calendar";
+    calendarContainer.style.display = "none";
+    dateField.insertAdjacentElement("afterend", calendarContainer);
+
+    const calendar = new FullCalendar.Calendar(calendarContainer, {
+        initialView: "dayGridMonth",
+        selectable: true,
+        dateClick: function (info) {
+            dateField.value = info.dateStr;
+            calendarContainer.style.display = "none";
+        }
+    });
+
+    dateField.addEventListener("focus", () => {
+        calendarContainer.style.display = "block";
+        calendar.render();
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!calendarContainer.contains(e.target) && e.target !== dateField) {
+            calendarContainer.style.display = "none";
+        }
+    });
+
     form.addEventListener("submit", function (e) {
         e.preventDefault();
         let isValid = true;
@@ -58,8 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p><strong>Condition:</strong> ${document.getElementById("condition").value}</p>
                 ${option === "PICK-UP"
                     ? `<p><strong>Address:</strong> ${document.getElementById("address").value}</p>`
-                    : `<p><strong>Drop-off Location:</strong> ${document.getElementById("dropoff").value}</p>`
-                }
+                    : `<p><strong>Drop-off Location:</strong> ${document.getElementById("dropoff").value}</p>`}
             `;
             confirmationDetails.innerHTML = summaryHTML;
             modal.classList.add("show");
@@ -106,4 +130,13 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("dropoff").required = false;
         }
     });
+
+    const style = document.createElement("style");
+    style.innerHTML = `
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            display: none;
+            -webkit-appearance: none;
+        }
+    `;
+    document.head.appendChild(style);
 });

@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once "database.php";
 
 $errors = [];
 $username = $_POST['username'] ?? '';
@@ -34,15 +35,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $errors['number'] = "Phone Number must be at least 11 digits.";
     }
 
+    // Check for duplicates
     if (empty($errors)) {
-        $_SESSION['registeredUser'] = $username;
-        $_SESSION['registeredPass'] = password_hash($password, PASSWORD_DEFAULT);
-        $_SESSION['fullname'] = $fullname;
-        $_SESSION['email'] = $email;
-        $_SESSION['number'] = $number;
+        $sql = $conn->prepare("SELECT * FROM accounts WHERE username = ? OR email_address = ?");
+        $sql->bind_param("ss", $username, $email);
+        $sql->execute();
+        $result = $sql->get_result();
 
-        header("Location: login.php?registered=success");
-        exit;
+        if ($result->num_rows > 0) {
+            $errors['username'] = "Username or Email already exists.";
+        }
+        $sql->close();
+    }
+
+    // Insert new user
+    if (empty($errors)) {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $sql = $conn->prepare("INSERT INTO accounts (username, full_name, password, email_address, phone_number) VALUES (?, ?, ?, ?, ?)");
+        $sql->bind_param("sssss", $username, $fullname, $hashedPassword, $email, $number);
+
+        if ($sql->execute()) {
+            header("Location: login.php?registered=success");
+            exit;
+        } else {
+            $errors['database'] = "Error saving your data. Please try again.";
+        }
+        $sql->close();
     }
 }
 ?>
@@ -61,22 +79,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <h2>SIGN IN</h2>
             <form id="SigninForm" method="POST" action="sign_in.php">
                 <input type="text" name="username" id="username" placeholder="Username" required value="<?= htmlspecialchars($username) ?>">
-                <p class="error-message" id="usernameError"><?= $errors['username'] ?? '' ?></p>
+                <p class="error-message"><?= $errors['username'] ?? '' ?></p>
 
                 <input type="text" name="fullname" id="fullname" placeholder="Full Name" required value="<?= htmlspecialchars($fullname) ?>">
-                <p class="error-message" id="fullnameError"><?= $errors['fullname'] ?? '' ?></p>
+                <p class="error-message"><?= $errors['fullname'] ?? '' ?></p>
 
                 <input type="password" name="password" id="password" placeholder="Password" required>
-                <p class="error-message" id="passwordError"><?= $errors['password'] ?? '' ?></p>
+                <p class="error-message"><?= $errors['password'] ?? '' ?></p>
 
                 <input type="password" name="confirmpassword" id="confirmpassword" placeholder="Confirm Password" required>
-                <p class="error-message" id="confirmPasswordError"><?= $errors['confirmpassword'] ?? '' ?></p>
+                <p class="error-message"><?= $errors['confirmpassword'] ?? '' ?></p>
 
                 <input type="text" name="email" id="email" placeholder="Email Address" required value="<?= htmlspecialchars($email) ?>">
-                <p class="error-message" id="emailError"><?= $errors['email'] ?? '' ?></p>
+                <p class="error-message"><?= $errors['email'] ?? '' ?></p>
 
                 <input type="text" name="number" id="number" placeholder="Phone Number" required value="<?= htmlspecialchars($number) ?>">
-                <p class="error-message" id="numberError"><?= $errors['number'] ?? '' ?></p>
+                <p class="error-message"><?= $errors['number'] ?? '' ?></p>
+
+                <?php if (isset($errors['database'])): ?>
+                    <p class="error-message"><?= $errors['database'] ?></p>
+                <?php endif; ?>
 
                 <button type="submit" class="signin-btn">SIGN IN</button>
             </form>
