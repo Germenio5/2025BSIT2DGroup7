@@ -10,7 +10,10 @@ $confirmpassword = $_POST['confirmpassword'] ?? '';
 $email = $_POST['email'] ?? '';
 $number = $_POST['number'] ?? '';
 
+// Run code only when form is submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    // Basic input validation
     if (strlen($username) < 5) {
         $errors['username'] = "Username must be at least 5 characters.";
     }
@@ -35,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $errors['number'] = "Phone Number must be at least 11 digits.";
     }
 
-    // Check for duplicates
+    // Check if username or email already exists in the database
     if (empty($errors)) {
         $sql = $conn->prepare("SELECT * FROM accounts WHERE username = ? OR email_address = ?");
         $sql->bind_param("ss", $username, $email);
@@ -48,22 +51,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $sql->close();
     }
 
-    // Insert new user
+    // If no errors, save new account to database
     if (empty($errors)) {
+        // Hash the password before saving for security
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        // Insert user info into 'accounts' table
         $sql = $conn->prepare("INSERT INTO accounts (username, full_name, password, email_address, phone_number) VALUES (?, ?, ?, ?, ?)");
         $sql->bind_param("sssss", $username, $fullname, $hashedPassword, $email, $number);
 
         if ($sql->execute()) {
             header("Location: login.php?registered=success");
             exit;
-        } else {
+        } 
+        else {
             $errors['database'] = "Error saving your data. Please try again.";
         }
+
         $sql->close();
     }
 }
 ?>
+
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

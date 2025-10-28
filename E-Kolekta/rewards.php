@@ -2,6 +2,7 @@
 session_start();
 require_once "database.php";
 
+// Check if user is logged in; if not, redirect to login page
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit;
@@ -9,16 +10,16 @@ if (!isset($_SESSION['username'])) {
 
 $username = $_SESSION['username'];
 
-// ✅ Get total points of the user
+// Fetch total accumulated points for the logged-in user
 $stmt = $conn->prepare("SELECT SUM(points) AS total_points FROM donations WHERE username = ?");
 $stmt->bind_param("s", $username);
 $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
-$userPoints = $row['total_points'] ?? 0;
+$userPoints = $row['total_points'] ?? 0; // Default to 0 if no points
 $stmt->close();
 
-
+// Fetch the 5 most recent donations of the user to display in the table
 $stmt = $conn->prepare("
     SELECT donation_date, ewaste_type, e_waste_condition, weight, points
     FROM donations
@@ -31,6 +32,7 @@ $stmt->execute();
 $donations = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
+// Reward list (static) — defines what users can redeem and the required points for each
 $rewards = [
     ["amount" => "PHP 20.00", "cost" => 200.00],
     ["amount" => "PHP 50.00", "cost" => 500.00],
@@ -58,11 +60,14 @@ $rewards = [
                 <div class="redeem-section">
                     <div id="reward_text">REWARD</div>
 
+                    <!-- Displays user's current total points -->
                     <div class="points_display">
                         POINTS: <div id="points"><?= number_format($userPoints, 2) ?></div>
                     </div>
+
                     <div id="point_text">RECENT OBTAINED POINTS</div>
 
+                    <!-- Shows last 5 donations and their earned points -->
                     <div class="points-table-container">
                         <table class="points-table">
                             <thead>
@@ -87,7 +92,7 @@ $rewards = [
                                             <td><?= htmlspecialchars($donation['donation_date']); ?></td>
                                             <td><?= htmlspecialchars($donation['ewaste_type']); ?></td>
                                             <td><?= htmlspecialchars($donation['e_waste_condition']); ?></td>
-                                            <td><?= htmlspecialchars($donation['weight_kg']); ?></td>
+                                            <td><?= htmlspecialchars($donation['weight']); ?></td>
                                             <td><?= htmlspecialchars($donation['points']); ?></td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -98,6 +103,7 @@ $rewards = [
                 </div>
             </div>
 
+            <!-- Reward redemption section -->
             <div class="redeem_reward_container">
                 <h3>REDEEM POINTS</h3>
                 <div class="redeem-cards">
@@ -105,6 +111,7 @@ $rewards = [
                         <div class="redeem-card">
                             <h4><?= $reward['amount'] ?></h4>
                             <p><?= number_format($reward['cost'], 2) ?> POINTS</p>
+                            <!-- Disable the redeem button if user doesn't have enough points -->
                             <button class="redeem-btn" 
                                 <?= ($userPoints < $reward['cost']) ? 'disabled style="background:#ccc;cursor:not-allowed;"' : '' ?>>
                                 <?= ($userPoints < $reward['cost']) ? 'Not Enough Points' : 'REDEEM' ?>

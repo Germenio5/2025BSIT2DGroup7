@@ -6,26 +6,32 @@ $resetMessage = "";
 $resetColor = "red";
 $email = $_POST['email'] ?? '';
 
+// When form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Check if the email input is valid
     if (!empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-        // Check if the email exists in the accounts table
+        // Check if the entered email exists in the database
         $sql = $conn->prepare("SELECT * FROM accounts WHERE email_address = ?");
         $sql->bind_param("s", $email);
         $sql->execute();
         $result = $sql->get_result();
 
+        // If email found → show success message (simulating sending reset link)
         if ($result->num_rows > 0) {
-            // Simulate sending reset link
             $resetMessage = "A reset link has been sent to your email. It will expire in 5 minutes.";
             $resetColor = "lime";
-        } else {
+        } 
+
+        else {
             $resetMessage = "No account found with this email address.";
             $resetColor = "red";
         }
 
         $sql->close();
-    } else {
+    } 
+
+    else {
         $resetMessage = "Please enter a valid email.";
         $resetColor = "red";
     }

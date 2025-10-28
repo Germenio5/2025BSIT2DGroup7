@@ -2,7 +2,7 @@
 session_start();
 require_once "database.php";
 
-// Make sure user is logged in
+// Check if user is logged in
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit;
@@ -12,14 +12,14 @@ $username = $_SESSION['username'];
 $message = "";
 $messageType = "";
 
-// Fetch current user info from DB (always fetch on every page load)
+// Get user info
 $stmt = $conn->prepare("SELECT * FROM accounts WHERE username = ?");
 $stmt->bind_param("s", $username);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
-// Helper: redirect back with query param to show a message (prevents form re-submission)
+// Redirect with message
 function redirect_with_message($msgType, $msg) {
     $url = "settings.php";
     $params = [
@@ -30,39 +30,46 @@ function redirect_with_message($msgType, $msg) {
     exit;
 }
 
-// If redirected back with message, populate $message & $messageType
+// Display message
 if (isset($_GET['mtype']) && isset($_GET['msg'])) {
     $messageType = $_GET['mtype'];
     $message = rawurldecode($_GET['msg']);
 }
 
-// Handle profile photo upload
+// Upload profile photo (stored as BLOB in database)
 if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['upload_new'])) {
     if (isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] === UPLOAD_ERR_OK) {
-        $targetDir = "uploads/";
-        if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
-        $ext = strtolower(pathinfo($_FILES['profile_photo']['name'], PATHINFO_EXTENSION));
-        $allowed = ['jpg','jpeg','png','gif'];
-        if (!in_array($ext, $allowed)) {
-            redirect_with_message("error", "Invalid image type. Allowed: jpg, png, gif.");
-        }
-        $fileName = "profile_" . $username . "_" . time() . "." . $ext;
-        $targetFile = $targetDir . $fileName;
 
-        if (move_uploaded_file($_FILES['profile_photo']['tmp_name'], $targetFile)) {
+        $fileTmp = $_FILES['profile_photo']['tmp_name'];
+        $fileType = mime_content_type($fileTmp);
 
-            // Update session and redirect so page reloads and shows new image
-            $_SESSION['profileImage'] = $targetFile;
-            redirect_with_message("success", "Profile photo updated successfully!");
-        } else {
-            redirect_with_message("error", "Error uploading image.");
+        // Allowed image types
+        $allowed = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!in_array($fileType, $allowed)) {
+            redirect_with_message("error", "Invalid image type. Allowed: jpg, jpeg, png, gif.");
         }
+
+        // Read image as binary data
+        $imageData = file_get_contents($fileTmp);
+
+        // Store image directly in database
+        $stmt = $conn->prepare("UPDATE accounts SET profile_image = ? WHERE username = ?");
+        $null = NULL;
+        $stmt->bind_param("bs", $null, $username);
+        $stmt->send_long_data(0, $imageData);
+        $stmt->execute();
+        $stmt->close();
+
+        // Save base64 version in session for sidebar display
+        $_SESSION['profileImage'] = base64_encode($imageData);
+
+        redirect_with_message("success", "Profile photo updated successfully!");
     } else {
         redirect_with_message("error", "No file uploaded or upload error.");
     }
 }
 
-// Allowed fields mapping (form name => DB column)
+// Editable fields
 $allowedFields = [
     "username" => "username",
     "fullname" => "full_name",
@@ -70,7 +77,7 @@ $allowedFields = [
     "number" => "phone_number"
 ];
 
-// Handle updating fields (username/fullname/email/number)
+// Update user info
 if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['update_field'])) {
     $field = $_POST['update_field'];
     if (!array_key_exists($field, $allowedFields)) {
@@ -82,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['update_field'])) {
         redirect_with_message("error", "Please enter a valid $field.");
     }
 
-    // Basic validation
+    // Validate inputs
     if ($field === 'username' && strlen($value) < 5) {
         redirect_with_message("error", "Username must be at least 5 characters.");
     }
@@ -95,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['update_field'])) {
 
     $column = $allowedFields[$field];
 
-    // Check duplicates for username/email
+    // Check duplicates
     if ($field === 'username' || $field === 'email') {
         $checkCol = $field === 'username' ? 'username' : 'email_address';
         $stmt = $conn->prepare("SELECT id FROM accounts WHERE $checkCol = ? AND username <> ?");
@@ -109,21 +116,15 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['update_field'])) {
         $stmt->close();
     }
 
-    // Perform update
+    // Update field
     $stmt = $conn->prepare("UPDATE accounts SET $column = ? WHERE username = ?");
     $stmt->bind_param("ss", $value, $username);
     if ($stmt->execute()) {
         $stmt->close();
-        // If username changed, update session username so next fetch uses new username
         if ($field === 'username') {
             $_SESSION['username'] = $value;
             $username = $value;
         }
-        // Also update relevant session variables for display (optional)
-        if ($field === 'fullname') $_SESSION['fullname'] = $value;
-        if ($field === 'email') $_SESSION['email'] = $value;
-        if ($field === 'number') $_SESSION['number'] = $value;
-
         redirect_with_message("success", ucfirst($field) . " updated successfully!");
     } else {
         $stmt->close();
@@ -131,13 +132,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['update_field'])) {
     }
 }
 
-// Handle password change
+// Change password
 if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['change_password'])) {
     $current = $_POST['current_password'] ?? '';
     $new = $_POST['new_password'] ?? '';
     $confirm = $_POST['confirm_password'] ?? '';
 
-    // Fetch hashed password from DB
     $stmt = $conn->prepare("SELECT password FROM accounts WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
@@ -148,7 +148,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['change_password'])) {
     if (!password_verify($current, $hashedPass)) {
         redirect_with_message("error", "Incorrect current password.");
     }
-
     if ($new !== $confirm || strlen($new) < 8) {
         redirect_with_message("error", "Passwords do not match or too short (min 8).");
     }
@@ -165,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['change_password'])) {
     }
 }
 
-// Handle account deletion
+// Delete account
 if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['delete_account'])) {
     $stmt = $conn->prepare("DELETE FROM accounts WHERE username = ?");
     $stmt->bind_param("s", $username);
@@ -197,20 +196,29 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['delete_account'])) {
     <div class="main-content">
         <div id="settings_text">SETTINGS</div>
 
-        <?php if (!empty($message) || (!empty($_GET['mtype']) && !empty($_GET['msg']))): 
-            // If redirected, we already populated $message from GET above
-        ?>
+        <?php if (!empty($message)): ?>
             <div class="notif-box <?= htmlspecialchars($messageType) ?>"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
 
         <div class="settings-box">
             <div class="profile-section">
                 <div class="profile-pic">
-                    <?php $profileImage = $_SESSION['profileImage'] ?? "images/user_icon.png"; ?>
+                    <?php
+                    // Display profile photo from database (BLOB) or default
+                    $defaultImage = "images/user_icon.png";
+                    if (!empty($user['profile_image'])) {
+                        $profileImage = 'data:image/jpeg;base64,' . base64_encode($user['profile_image']);
+                    } elseif (!empty($_SESSION['profileImage'])) {
+                        $profileImage = 'data:image/jpeg;base64,' . $_SESSION['profileImage'];
+                    } else {
+                        $profileImage = $defaultImage;
+                    }
+                    ?>
                     <img id="profilePreview" src="<?= htmlspecialchars($profileImage) ?>" alt="Profile Picture">
                 </div>
             </div>
 
+            <!-- Upload new profile photo -->
             <form id="profile_form" method="POST" enctype="multipart/form-data">
                 <div class="setting-item">
                     <div class="setting-row">
@@ -225,7 +233,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['delete_account'])) {
             </form>
 
             <?php
-            // Use fresh $user fetched at top
             $fields = [
                 "username" => $user['username'] ?? '',
                 "fullname" => $user['full_name'] ?? '',
@@ -246,6 +253,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['delete_account'])) {
                 </div>
             <?php endforeach; ?>
 
+            <!-- Change password -->
             <div class="setting-item">
                 <div class="setting-row">
                     <span class="setting-label">Change password</span>
@@ -259,6 +267,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['delete_account'])) {
                 </form>
             </div>
 
+            <!-- Delete account -->
             <form method="POST" onsubmit="return confirm('Are you sure you want to delete your account?');">
                 <div class="setting-item">
                     <div class="setting-row">

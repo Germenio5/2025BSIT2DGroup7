@@ -4,33 +4,43 @@ require_once "database.php";
 
 $error = '';
 
+// Run only when form is submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    // Check if user exists in the "accounts" table
+    // Check if username exists in the database
     $sql = $conn->prepare("SELECT * FROM accounts WHERE username = ?");
     $sql->bind_param("s", $username);
     $sql->execute();
     $result = $sql->get_result();
 
+    // If user found → verify password
     if ($result && $result->num_rows === 1) {
         $user = $result->fetch_assoc();
 
-        // Verify the password
+        // Compare entered password with hashed one in database
         if (password_verify($password, $user['password'])) {
+
+            // Protect session by regenerating ID
+            session_regenerate_id(true);
+
+            // Save user info into session for later use
             $_SESSION['loggedIn'] = true;
             $_SESSION['username'] = $user['username'];
             $_SESSION['full_name'] = $user['full_name'];
             $_SESSION['email_address'] = $user['email_address'];
             $_SESSION['phone_number'] = $user['phone_number'];
 
+            // Redirect to dashboard page after successful login
             header("Location: dashboard.php");
             exit;
-        } else {
+        } 
+        else {
             $error = "Invalid username or password.";
         }
-    } else {
+    } 
+    else {
         $error = "Invalid username or password.";
     }
 
@@ -57,24 +67,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             Account created successfully! Please log in.
                         </div>
                     <?php endif; ?>
-
                     <input type="text" name="username" id="username" placeholder="Username" required>
                     <input type="password" name="password" id="password" placeholder="Password" required>
-
                     <?php if (!empty($error)): ?>
                         <div style="color: red; text-align:left; font-size:14px; margin:5px 0 5px 5px;">
                             <?= $error ?>
                         </div>
                     <?php endif; ?>
-                    
                     <div class="remember">
                         <input type="checkbox" name="remember" id="remember">
                         <label for="remember">Remember Me</label>
                     </div>
-
                     <button type="submit" class="login-btn">LOGIN</button>
                 </form>
-
                 <div class="links">
                     Don’t Have Account? <a href="sign_in.php">Sign in here</a><br>
                     Forgot your password? <a href="reset_password.php">Reset it.</a>
